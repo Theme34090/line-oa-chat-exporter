@@ -81,6 +81,9 @@ def download_chat_csv(client, config, chat_id):
     url = f"{base}/download/{bot_id}/{chat_id}/messages.csv?timezoneOffset=-{tz}"
 
     resp = client.get(url)
+    if resp.status_code in (401, 302):
+        print(f"\n[ERROR] Session expired. Refresh cookies in config.json.", flush=True)
+        sys.exit(1)
     if resp.status_code != 200:
         print(f"  [ERROR] {resp.status_code} {resp.text[:200]}", flush=True)
         return None
